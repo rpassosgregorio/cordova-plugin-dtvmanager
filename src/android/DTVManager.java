@@ -23,13 +23,8 @@ package com.apptec.dtvmanager;
 //Bibliotecas
 /*Bibliotecas Android*/
 import android.app.Activity;
-import android.graphics.Color;
-import android.os.Build;
 import android.util.Log;
-import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
-import android.os.RemoteException;
 
 /*Bibliotecas cordova*/
 import org.apache.cordova.CallbackContext;
@@ -41,10 +36,8 @@ import org.apache.cordova.PluginResult;
 import org.json.JSONException;
 
 /*Bibliotecas Java*/
-import java.util.Arrays;
-import java.util.ArrayList;
+
 import java.util.List;
-import java.lang.Exception.*;
 import java.lang.*;//Thread.*;
 
 /*Bibliotecas SDMV - AIDL - low level*/
@@ -56,10 +49,7 @@ import com.sdmc.dtv.acpi.DTVACPIManager;
 import com.sdmc.dtv.acpi.ProgramInfo;
 import com.sdmc.dtv.acpi.ProgramSearch;
 import com.sdmc.dtv.acpi.TunerInfo;
-import com.sdmc.dtv.acpi.NoPermissionsException;
 //import com.sdmc.dtv.acpi.QuickIntegration;
-
-/*### Fim Bibliotecas SDMV - ACPI - high level ###*/
 
 public class DTVManager extends CordovaPlugin {
     private static final String TAG = "DTVChannelSearch";
@@ -801,6 +791,17 @@ public class DTVManager extends CordovaPlugin {
 						}
 
 						int iChannelID = Integer.parseInt(args.get(0).toString());
+						int iCurrPlayingChannel = piProgramInfo.getCurrentProgram().getId();
+
+						if(iChannelID == iCurrPlayingChannel) {
+							prResultPCId = new PluginResult(PluginResult.Status.OK,
+									"Already playing this channel - ID"	+ iCurrPlayingChannel);
+
+							prResultPCId.setKeepCallback(true);
+							callbackContext.sendPluginResult(prResultPCId);
+							return true;
+						}
+
 
 						for(int i = 0; i < iNumberOfChannels; i++){
 							if(iChannelID == piProgramInfo.getPrograms().get(i).getId()){
