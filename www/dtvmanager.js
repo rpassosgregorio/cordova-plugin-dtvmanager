@@ -96,7 +96,6 @@ var DTVManager = {
     },
 	
 	getAllChannelsID: function (callback) {
-		alert("here");
        exec(function(winParam){
                callback(null, winParam);
            }, function(error){
